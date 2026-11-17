@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     const incoming = thread?.messages?.find((m: any) => m.messageId === messageId);
     if (!incoming) return NextResponse.json({ error: "The prospect email has not arrived yet. Please try again." }, { status: 504 });
     const replyText = respond(incoming.extractedText || incoming.text || "");
-    await mail.inboxes.messages.reply(agentInbox, messageId, replyText);
+    await mail.inboxes.messages.reply(agentInbox, messageId, { text: replyText });
     const updated = await mail.inboxes.threads.get(agentInbox, threadId);
     const messages = (updated.messages || []).map((m: any) => ({
       messageId: m.messageId, from: m.from, text: m.text,
